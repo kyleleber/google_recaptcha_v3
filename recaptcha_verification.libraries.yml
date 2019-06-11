@@ -6,3 +6,9 @@ recaptchav3:
     - core/jquery
     - core/drupal
     - core/drupalSettings
+
+recaptchav3.css:
+  version: VERSION
+  css:
+    theme:
+      css/recaptchav3.css: {}

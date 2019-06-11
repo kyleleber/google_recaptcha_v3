@@ -15,15 +15,18 @@ use Drupal\Core\Url;
  */
 function recaptcha_verification_preprocess_html(&$variables) {
   if (!(\Drupal::service('router.admin_context')->isAdminRoute()) && is_page_allowed() && !is_disabled()) {
-
+    $recaptcha_config = \Drupal::service('config.factory')->get('recaptcha_verification.settings');
     // Attach the external google recaptcha library
     $variables['#attached']['library'][] = 'recaptcha_verification/google';
 
     // Attach the recaptchav3 library.
     $variables['#attached']['library'][] = 'recaptcha_verification/recaptchav3';
 
+    if ($recaptcha_config->get('hide_badge')) {
+      $variables['#attached']['library'][] = 'recaptcha_verification/recaptchav3.css';
+    }
     // Get the site key from configuration and pass it along in drupalSettings.
-    $site_key = \Drupal::service('config.factory')->get('recaptcha_verification.settings')->get('site_key');
+    $site_key = $recaptcha_config->get('site_key');
     $variables['#attached']['drupalSettings']['recaptcha_sitekey'] = $site_key;
   }
 }

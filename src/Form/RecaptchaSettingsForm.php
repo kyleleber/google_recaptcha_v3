@@ -89,6 +89,12 @@ class RecaptchaSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('status'),
       '#title' => $this->t('Disable Recaptcha from being loaded.'),
     ];
+    $form['hide_badge'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $config->get('hide_badge'),
+      '#title' => $this->t('Hide ReCAPTCHA badge'),
+      '#description' => $this->t('Hide the reCaptcha badge. Review the terms at: https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-v3-badge-what-is-allowed'),
+    ];
     $form['paths'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Pages to track (optional)'),
@@ -124,6 +130,7 @@ class RecaptchaSettingsForm extends ConfigFormBase {
       ->set('site_key', $form_state->getValue('site_key'))
       ->set('status', $form_state->getValue('status'))
       ->set('paths', $form_state->getValue('paths'))
+      ->set('hide_badge', $form_state->getValue('hide_badge'))
       ->save();
   }
 
