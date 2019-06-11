@@ -1,0 +1,60 @@
+CONTENTS OF THIS FILE
+---------------------
+ * Introduction
+ * Requirements
+ * Recommended modules
+ * Installation
+ * Configuration
+ * Examples
+ * Troubleshooting
+ * FAQ
+ * Maintainers
+
+INTRODUCTION
+------------
+The `recaptcha_verification` module provides functionality that is used with
+a Google Recaptchav3 implementation. This module defines a system that can be used
+to connect a google account by site key and secret key, and execute recaptcha actions.
+
+
+REQUIREMENTS
+------------
+This module has no other module dependencies.
+
+This module requires a Google recaptchav3 application.
+
+An active Google Tag Manager implementation is required on your site. For more information,
+visit https://tagmanager.google.com/#/home.
+
+For more information about Google Recaptchav3, visit https://developers.google.com/recaptcha/docs/v3.
+
+RECOMMENDED MODULES
+-------------------
+recaptcha (https://www.drupal.org/project/recaptcha)
+
+INSTALLATION
+------------
+On initial installation, site keys / secret keys must be entered in the configuration form
+found on /admin/config/recaptcha_verification/recaptcha/settings.
+
+CONFIGURATION
+-------------
+This module provides a configuration form with various settings, such as defining specific paths in
+which the recaptcha libraries will be loaded. A killswitch is also available in the event that it is
+needed.
+
+EXAMPLES
+--------
+N/A
+
+TROUBLESHOOTING
+---------------
+N/A
+
+FAQ
+---
+N/A
+
+MAINTAINERS
+-----------
+Kyle Leber <kyleleber2014@gmail.com>

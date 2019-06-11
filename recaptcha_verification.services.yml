@@ -1,0 +1,9 @@
+services:
+  recaptcha.logger:
+    class: 'Psr\Logging\LoggerInterface'
+    factory: 'logger.factory:get'
+    arguments: ['recaptcha_verification']
+
+  recaptcha.verification:
+    class: Drupal\recaptcha_verification\RecaptchaVerification
+    arguments: ["@recaptcha.logger", "@config.factory", "@http_client"]

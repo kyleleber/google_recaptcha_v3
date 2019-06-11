@@ -1,0 +1,27 @@
+recaptcha.settings:
+  path: '/admin/config/recaptcha_verification/recaptcha'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Manage Recaptcha Settings'
+  requirements:
+    _permission: 'administer recaptcha verification settings'
+  options:
+    _admin_route: TRUE
+
+recaptcha.settings-form:
+  path: '/admin/config/recaptcha_verification/recaptcha/settings'
+  defaults:
+    _form: '\Drupal\recaptcha_verification\Form\RecaptchaSettingsForm'
+    _title: 'Recaptcha Settings Form'
+  requirements:
+    _permission: 'administer recaptcha verification settings'
+  options:
+    _admin_route: TRUE
+
+recaptcha.verification:
+  path: '/recaptcha_verification/{token}'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\recaptcha_verification\Controller\VerificationController::getScore'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,8 @@
+recaptchav3:
+  version: VERSION
+  js:
+    js/recaptchav3.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

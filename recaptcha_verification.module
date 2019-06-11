@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @file
+ * recaptcha_verification.module
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Attach the recaptcha libraries for all non-admin routes.
+ */
+function recaptcha_verification_preprocess_html(&$variables) {
+  if (!(\Drupal::service('router.admin_context')->isAdminRoute()) && is_page_allowed() && !is_disabled()) {
+
+    // Attach the external google recaptcha library
+    $variables['#attached']['library'][] = 'recaptcha_verification/google';
+
+    // Attach the recaptchav3 library.
+    $variables['#attached']['library'][] = 'recaptcha_verification/recaptchav3';
+
+    // Get the site key from configuration and pass it along in drupalSettings.
+    $site_key = \Drupal::service('config.factory')->get('recaptcha_verification.settings')->get('site_key');
+    $variables['#attached']['drupalSettings']['recaptcha_sitekey'] = $site_key;
+  }
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function recaptcha_verification_library_info_build() {
+
+  $site_key = \Drupal::config('recaptcha_verification.settings')->get('site_key');
+
+  $libs['google'] = [
+    'header' => TRUE,
+    'js' => [
+      'https://www.google.com/recaptcha/api.js?render=' . $site_key  => [
+        'type' => 'external',
+        'weight' => 0,
+        'attributes' => [
+          'async' => TRUE,
+        ],
+      ],
+    ],
+  ];
+
+  // Need to add cacheable dependency on the conf object.
+  return $libs;
+}
+
+/**
+ * Checks if the current path is in a list of paths
+ */
+function is_page_allowed() {
+  $paths = \Drupal::config('recaptcha_verification.settings')->get('paths');
+  $url = Url::fromRoute('<current>')->toString();
+
+  return empty($paths) || \Drupal::service('path.matcher')->matchPath($url, $paths);
+}
+
+/**
+ * Checks if the recaptcha verification is enabled for the site.
+ *
+ * @return array|mixed|null
+ *   Whether the recaptcha verification service should be loaded.
+ */
+function is_disabled() {
+  return (boolean) \Drupal::config('recaptcha_verification.settings')->get('status');
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * {@inheritdoc}
+ */
+function recaptcha_verification_page_attachments(&$attachments) {
+  $route_match = \Drupal::routeMatch();
+  $admin_context = \Drupal::service('router.admin_context');
+
+  // Only set cookies if not on an administrative route.
+  // @TODO - Find a better way to do this.
+  if (!$admin_context->isAdminRoute()) {
+    if (($route = $route_match->getRouteObject()) && ($parameters = $route->getOption('parameters'))) {
+      foreach ($parameters as $name => $options) {
+        // Determine if the current route represents an entity.
+        if (isset($options['type']) && strpos($options['type'], 'entity:') === 0) {
+          $entity = $route_match->getParameter($name);
+          if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
+            foreach ($entity->getFields() as $field) {
+              // If the entity has a cookie field, load its complex values.
+              if ($field->getFieldDefinition()->getType() === "action") {
+
+                // Iterate over each of the cookie's field and set appropriate values.
+                foreach ($field->getValue() as $value) {
+                  $name = $value['name'] ?: NULL;
+                  $datalayer = (bool)$value['datalayer'];
+                  if ($name) {
+                    $attachments['#attached']['drupalSettings']['actions'][] = ['name' => $name, 'datalayer' => $datalayer];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

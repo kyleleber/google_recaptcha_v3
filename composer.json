@@ -1,0 +1,12 @@
+{
+    "name": "kyleleber/google_recaptcha_v3",
+    "description": "Recaptcha Verification integration in Drupal 8.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Kyle Leber",
+            "email": "kyleleber2014@gmail.com"
+        }
+    ],
+    "require": {}
+}

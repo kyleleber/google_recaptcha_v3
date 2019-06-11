@@ -1,0 +1,12 @@
+recaptcha.settings:
+  title: 'Recaptcha Verification Settings'
+  description: 'Manage Recaptcha Settings'
+  route_name: recaptcha.settings
+  parent: system.admin_config
+
+recaptcha.settings-form:
+  title: 'Recaptcha Settings Form'
+  route_name: recaptcha.settings-form
+  description: 'Manage Recaptcha settings'
+  parent: recaptcha.settings
+  weight: 99
